@@ -25,6 +25,15 @@ jobs:
       CC_TEST_REPORTER_ID: e52010675d2774ee408c14c0de08c143d0749e59beb6dd729254d1b3ea94c7b1
     steps:
       - samvera/cached_checkout
+      - run:
+         name: Check for a branch named 'master'
+         command: |
+           git fetch --all --quiet --prune --prune-tags
+           if [[ -n "$(git branch --all --list master */master)" ]]; then
+             echo "A branch named 'master' was found. Please remove it."
+             echo "$(git branch --all --list master */master)"
+           fi
+           [[ -z "$(git branch --all --list master */master)" ]]
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
